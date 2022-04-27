@@ -12,6 +12,7 @@ $('#search-btn').click(function () {
         author.push($(this).attr('name'));
     });
     console.log(JSON.stringify(author));
+    console.log(JSON.stringify(genre));
     $.ajax({
         type: 'post',
         url: urlSearchBook,

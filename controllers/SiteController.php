@@ -103,8 +103,13 @@ class SiteController extends Controller
                     $string = ' and ba.id in (' . implode(',', $author) . ')';
                 }
                 $string2 = '';
-                if(!empty($author)){
-                    $string2 = ' and bg.genre_id in (' . implode(',', $genre) . ')';
+                if(!empty($genre)){
+                    if(empty($string)) {
+                        $string2 = ' and bg.genre_id in (' . implode(',', $genre) . ')';
+                    }
+                    else{
+                        $string2 = ' and bg.genre_id in (' . implode(',', $genre) . ')';
+                    }
                 }
                 $query = new Query();
                 $searchQuery = $query->select(['b.id', 'b.title', 'b.description', 'group_concat(g.genre, "") as genre', 'ba.author'])
@@ -124,8 +129,13 @@ class SiteController extends Controller
                     $string = ' and ba.id in (' . implode(',', $author) . ')';
                 }
                 $string2 = '';
-                if(!empty($author)){
-                    $string2 = ' and bg.genre_id in (' . implode(',', $genre) . ')';
+                if(!empty($genre)){
+                    if(empty($string)) {
+                        $string2 = ' and bg.genre_id in (' . implode(',', $genre) . ')';
+                    }
+                    else{
+                        $string2 = ' and bg.genre_id in (' . implode(',', $genre) . ')';
+                    }
                 }
                 $query = new Query();
                 $searchQuery = $query->select(['b.id', 'b.title', 'b.description', 'group_concat(g.genre, "") as genre', 'ba.author'])
@@ -144,8 +154,13 @@ class SiteController extends Controller
                     $string = ' and ba.id in (' . implode(',', $author) . ')';
                 }
                 $string2 = '';
-                if(!empty($author)){
-                    $string2 = ' and bg.genre_id in (' . implode(',', $genre) . ')';
+                if(!empty($genre)){
+                    if(empty($string)) {
+                        $string2 = ' and bg.genre_id in (' . implode(',', $genre) . ')';
+                    }
+                    else{
+                        $string2 = ' and bg.genre_id in (' . implode(',', $genre) . ')';
+                    }
                 }
                 $query = new Query();
                 $searchQuery = $query->select(['b.id', 'b.title', 'b.description', 'group_concat(g.genre, "") as genre', 'ba.author'])
@@ -159,23 +174,42 @@ class SiteController extends Controller
                     ->groupBy('b.id')
                     ->all();
             }
+            // выбор по чекбоксам жанрам или авторов
             else{
                 $string = '';
                 if(!empty($author)){
-                    $string = ' and ba.id in (' . implode(',', $author) . ')';
+                    $string = ' ba.id in (' . implode(',', $author) . ')';
                 }
                 $string2 = '';
-                if(!empty($author)){
-                    $string2 = ' and bg.genre_id in (' . implode(',', $genre) . ')';
+                if(!empty($genre)){
+                    if(empty($string)){
+                        $string2 = ' bg.genre_id in (' . implode(',', $genre) . ')';
+                    }
+                    else{
+                        $string2 = ' and bg.genre_id in (' . implode(',', $genre) . ')';
+                    }
                 }
-                $query = new Query();
-                $searchQuery = $query->select(['b.id', 'b.title', 'b.description', 'group_concat(g.genre, "") as genre', 'ba.author'])
-                    ->from(['book as b'])
-                    ->leftJoin('book_author as ba', 'b.id = ba.book_id')
-                    ->leftJoin('book_genre as bg', 'b.id = bg.book_id')
-                    ->leftJoin('genre as g', 'bg.genre_id = g.id')
-                    ->groupBy('b.id')
-                    ->all();
+                if(!empty($string) or !empty($string2)){
+                    $query = new Query();
+                    $searchQuery = $query->select(['b.id', 'b.title', 'b.description', 'group_concat(g.genre, "") as genre', 'ba.author'])
+                        ->from(['book as b'])
+                        ->leftJoin('book_author as ba', 'b.id = ba.book_id')
+                        ->leftJoin('book_genre as bg', 'b.id = bg.book_id')
+                        ->leftJoin('genre as g', 'bg.genre_id = g.id')
+                        ->where($string . $string2)
+                        ->groupBy('b.id')
+                        ->all();
+                }
+                else{
+                    $query = new Query();
+                    $searchQuery = $query->select(['b.id', 'b.title', 'b.description', 'group_concat(g.genre, "") as genre', 'ba.author'])
+                        ->from(['book as b'])
+                        ->leftJoin('book_author as ba', 'b.id = ba.book_id')
+                        ->leftJoin('book_genre as bg', 'b.id = bg.book_id')
+                        ->leftJoin('genre as g', 'bg.genre_id = g.id')
+                        ->groupBy('b.id')
+                        ->all();
+                }
             }
             $dataProvider = new ArrayDataProvider([
                 'allModels' => $searchQuery,
