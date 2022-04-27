@@ -95,19 +95,38 @@ class SiteController extends Controller
         if (Yii::$app->request->post()) {
             $search = Yii::$app->request->post('search');
             $book = Yii::$app->request->post('book');
+            $author = json_decode(Yii::$app->request->post('author'), true);
+            $genre = json_decode(Yii::$app->request->post('genre'), true);
             if (!empty(Yii::$app->request->post('title'))) {
+                $string = '';
+                if(!empty($author)){
+                    $string = ' and ba.id in (' . implode(',', $author) . ')';
+                }
+                $string2 = '';
+                if(!empty($author)){
+                    $string2 = ' and bg.genre_id in (' . implode(',', $genre) . ')';
+                }
                 $query = new Query();
                 $searchQuery = $query->select(['b.id', 'b.title', 'b.description', 'group_concat(g.genre, "") as genre', 'ba.author'])
                     ->from(['book as b'])
                     ->leftJoin('book_author as ba', 'b.id = ba.book_id')
                     ->leftJoin('book_genre as bg', 'b.id = bg.book_id')
                     ->leftJoin('genre as g', 'bg.genre_id = g.id')
-                    ->where('b.title = "' . (Yii::$app->request->post('title')) . '"')
+//                    ->where('b.title = "' . (Yii::$app->request->post('title')) . '"')
+                    ->where('match(b.title) against("'. (Yii::$app->request->post('title')) .'") '.$string.' '.$string2.' ')
                     ->groupBy('b.id')
                     ->all();
 
             } // поиск по авторам
             else if ($search == 1) {
+                $string = '';
+                if(!empty($author)){
+                    $string = ' and ba.id in (' . implode(',', $author) . ')';
+                }
+                $string2 = '';
+                if(!empty($author)){
+                    $string2 = ' and bg.genre_id in (' . implode(',', $genre) . ')';
+                }
                 $query = new Query();
                 $searchQuery = $query->select(['b.id', 'b.title', 'b.description', 'group_concat(g.genre, "") as genre', 'ba.author'])
                     ->from(['book as b'])
@@ -115,11 +134,19 @@ class SiteController extends Controller
                     ->leftJoin('book_genre as bg', 'b.id = bg.book_id')
                     ->leftJoin('genre as g', 'bg.genre_id = g.id')
                     ->where(
-                        'ba.author like "%' . $book . '%"'
+                        'ba.author like "%' . $book . '%" '.$string.' '.$string2.' '
                     )
                     ->groupBy('b.id')
                     ->all();
             } else if ($search == 2) {
+                $string = '';
+                if(!empty($author)){
+                    $string = ' and ba.id in (' . implode(',', $author) . ')';
+                }
+                $string2 = '';
+                if(!empty($author)){
+                    $string2 = ' and bg.genre_id in (' . implode(',', $genre) . ')';
+                }
                 $query = new Query();
                 $searchQuery = $query->select(['b.id', 'b.title', 'b.description', 'group_concat(g.genre, "") as genre', 'ba.author'])
                     ->from(['book as b'])
@@ -127,8 +154,26 @@ class SiteController extends Controller
                     ->leftJoin('book_genre as bg', 'b.id = bg.book_id')
                     ->leftJoin('genre as g', 'bg.genre_id = g.id')
                     ->where(
-                        'g.genre like "%' . $book . '%"'
+                        'g.genre like "%' . $book . '%"  '.$string.' '.$string2.' '
                     )
+                    ->groupBy('b.id')
+                    ->all();
+            }
+            else{
+                $string = '';
+                if(!empty($author)){
+                    $string = ' and ba.id in (' . implode(',', $author) . ')';
+                }
+                $string2 = '';
+                if(!empty($author)){
+                    $string2 = ' and bg.genre_id in (' . implode(',', $genre) . ')';
+                }
+                $query = new Query();
+                $searchQuery = $query->select(['b.id', 'b.title', 'b.description', 'group_concat(g.genre, "") as genre', 'ba.author'])
+                    ->from(['book as b'])
+                    ->leftJoin('book_author as ba', 'b.id = ba.book_id')
+                    ->leftJoin('book_genre as bg', 'b.id = bg.book_id')
+                    ->leftJoin('genre as g', 'bg.genre_id = g.id')
                     ->groupBy('b.id')
                     ->all();
             }

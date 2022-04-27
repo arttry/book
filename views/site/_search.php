@@ -32,16 +32,18 @@ use yii\grid\GridView;
             [
                 'header' => 'Авторы',
                 'value' => function($data) {
-                    $rand = rand(1, 100000);
-                    return '<span id="spoiler-'.$rand.'" style="display: none">'.$data['author'].'</span><button spoiler="'.$rand.'" class="btn btn-success spoiler">Показать</button>';
+//                    $rand = rand(1, 100000);
+//                    return '<span id="spoiler-'.$rand.'" style="display: none">'.$data['author'].'</span><button spoiler="'.$rand.'" class="btn btn-success spoiler">Показать</button>';
+                    return $data['author'];
                 },
                 'format' => 'raw',
             ],
             [
                 'header' => 'Жанры',
                 'value' => function($data) {
-                    $rand = rand(1, 100000);
-                    return '<span id="spoiler-'.$rand.'" style="display: none">'.$data['genre'].'</span><button spoiler="'.$rand.'" class="btn btn-success spoiler">Показать</button>';
+//                    $rand = rand(1, 100000);
+//                    return '<span id="spoiler-'.$rand.'" style="display: none">'.$data['genre'].'</span><button spoiler="'.$rand.'" class="btn btn-success spoiler">Показать</button>';
+                    return $data['genre'];
                 },
                 'format' => 'raw',
             ],

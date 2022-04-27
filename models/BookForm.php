@@ -32,9 +32,9 @@ class BookForm extends Model
     public function attributeLabels()
     {
         return [
-            'book' => 'Введите автора книги',
+            'book' => 'Введите наименование',
             'search' => 'Поиск',
-            'title' => 'Наименование'
+            'title' => 'Название книги'
         ];
     }
 

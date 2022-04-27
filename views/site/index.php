@@ -26,6 +26,29 @@ $this->title = 'My Yii Application';
 
     <?= $form->field($model, 'book')->textInput() ?>
 
+    <label id="genre" style="text-decoration: underline">Жанры</label>
+    <div id="genre-all" style="display: none;">
+        <?php
+        $genres = \app\models\Genre::find()->all();
+        foreach ($genres as $genre){
+            echo Html::checkbox($genre->id, false, ['label' => $genre->genre, 'class' => 'genre']);
+            echo "&nbsp;&nbsp;&nbsp;&nbsp;";
+        }
+        ?>
+    </div>
+
+    <br/>
+    <label id="author" style="text-decoration: underline">Авторы</label>
+    <div id="author-all" style="display: none;">
+        <?php
+        $authors = \app\models\BookAuthor::find()->groupBy('author')->all();
+        foreach ($authors as $author){
+            echo Html::checkbox($author->id, false, ['label' => $author->author, 'class' => 'author']);
+            echo "&nbsp;&nbsp;&nbsp;&nbsp;";
+        }
+        ?>
+    </div>
+
     <div class="form-group">
         <?= Html::Button('Искать', ['class' => 'btn btn-primary', 'id' => 'search-btn']) ?>
     </div>
@@ -62,16 +85,18 @@ $this->title = 'My Yii Application';
             [
                 'header' => 'Авторы',
                 'value' => function($data) {
-                    $rand = rand(1, 100000);
-                    return '<span id="spoiler-'.$rand.'" style="display: none">'.$data['author'].'</span><button spoiler="'.$rand.'" class="btn btn-success spoiler">Показать</button>';
+//                    $rand = rand(1, 100000);
+//                    return '<span id="spoiler-'.$rand.'" style="display: none">'.$data['author'].'</span><button spoiler="'.$rand.'" class="btn btn-success spoiler">Показать</button>';
+                    return $data['author'];
                 },
                 'format' => 'raw',
             ],
             [
                 'header' => 'Жанры',
                 'value' => function($data) {
-                    $rand = rand(1, 100000);
-                    return '<span id="spoiler-'.$rand.'" style="display: none">'.$data['genre'].'</span><button spoiler="'.$rand.'" class="btn btn-success spoiler">Показать</button>';
+//                    $rand = rand(1, 100000);
+//                    return '<span id="spoiler-'.$rand.'" style="display: none">'.$data['genre'].'</span><button spoiler="'.$rand.'" class="btn btn-success spoiler">Показать</button>';
+                    return $data['genre'];
                 },
                 'format' => 'raw',
             ],

@@ -26,7 +26,9 @@ CREATE TABLE `book` (
   `id` int NOT NULL AUTO_INCREMENT,
   `description` text NOT NULL,
   `title` varchar(255) NOT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `title_UNIQUE` (`title`),
+  FULLTEXT KEY `f1` (`title`)
 ) ENGINE=InnoDB AUTO_INCREMENT=400 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -129,4 +131,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-04-26 14:59:28
+-- Dump completed on 2022-04-27 12:24:38
